@@ -74,6 +74,24 @@ Run it as `python3 backend/remind.py <command>`. Options reach it as environment
 (`REMIND_PANE_DATA`, `REMIND_PANE_TZ`, `REMIND_PANE_TELEGRAM_TOKEN`, `REMIND_PANE_TELEGRAM_CHAT`); the pane sets them from
 the plugin options, for a run by hand set them yourself.
 
+## What it runs, reads and sends
+
+The plugin is a pane (`hooks/register.tsx`) plus a small CLI (`backend/remind.py`, Python standard library only).
+
+- **Runs one program:** the Python from the **Python** option (default `python3`), as
+  `python3 -I <plugin folder>/backend/remind.py <list --json | add | done | undone | del | tick | now>`.
+  Nothing else is started, no shell. The arguments are the subcommand and the text you typed in the add field.
+- **Reads:** its own data file `reminders.json` (default `~/.local/share/remind-pane`, option **Data folder**) and,
+  only for dates, the system time zone. It does not read the conversation, your files, or the environment of your machine.
+  The plugin options (data folder, time zone, Telegram token and chat) are handed to the CLI as environment variables
+  `REMIND_PANE_DATA`, `REMIND_PANE_TZ`, `REMIND_PANE_TELEGRAM_TOKEN`, `REMIND_PANE_TELEGRAM_CHAT`.
+- **Sends:** nothing, unless you set both Telegram options. Then `remind.py tick` (and `test`) makes one HTTPS call to
+  `api.telegram.org` (`sendMessage`) with the text of a due reminder, to the chat id you set. The bot token is a
+  `sensitive` plugin option and is never written to the data file.
+- **Hooks:** `session.start` and `prompt.submit` only register the `/remind-pane` command and pass the event on unchanged;
+  `command.run` for `remind-pane` opens the pane; `session.end` / `classic.SessionStart` / `ui.close` reopen or close it after `/clear`;
+  `turn.complete` refreshes the list. No hook changes a prompt, a tool call or a setting.
+
 ## Install
 
 1. In Claude Code (a terminal session):

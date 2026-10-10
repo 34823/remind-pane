@@ -23,17 +23,15 @@ const n = atom({ plugin: 'remind-pane', key: 'n' } as const, 0) // key of the in
 let opt: Options = {}
 const env: Record<string, string> = {}
 
-async function setup($: EngineInterface) {
-  const home = (await $.env.get('HOME')) ?? ''
-  const data = (opt.dataDir || '').replace(/^~(?=\/|$)/, home)
-  if (data) env.REMIND_PANE_DATA = data
+async function setup() {
+  if (opt.dataDir) env.REMIND_PANE_DATA = opt.dataDir // the CLI expands a leading ~ itself
   if (opt.timezone) env.REMIND_PANE_TZ = opt.timezone
   if (opt.telegramToken) env.REMIND_PANE_TELEGRAM_TOKEN = opt.telegramToken
   if (opt.telegramChat) env.REMIND_PANE_TELEGRAM_CHAT = opt.telegramChat
 }
 
 async function cli($: EngineInterface, args: string[]) {
-  await setup($)
+  setup()
   const r = await $.process.run([opt.python || 'python3', '-I', `${$.plugin.root}/backend/remind.py`, ...args], { env, timeoutMs: 30_000 })
   if (r.exitCode !== 0) throw new Error((r.stderr || r.stdout).trim().split('\n').pop() || `exit code ${r.exitCode}`)
   return r.stdout

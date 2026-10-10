@@ -28,6 +28,11 @@ class Remind(unittest.TestCase):
     def items(self):
         return json.loads(self.run_cli("list", "--json").stdout)
 
+    def test_data_dir_expands_tilde(self):
+        env = dict(self.env, HOME=self.tmp.name, REMIND_PANE_DATA="~/rem")
+        self.run_cli("add", "--text", "x", env=env)
+        self.assertTrue((Path(self.tmp.name) / "rem" / "reminders.json").exists())
+
     def test_add_list_done_del(self):
         self.run_cli("add", "--text", "buy milk")
         self.run_cli("add", "--text", "call Anna", "--when", "+1d", "--repeat", "daily")

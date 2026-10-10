@@ -7,7 +7,6 @@ const ok = (stdout = '') => ({ value: { exitCode: 0, stdout, stderr: '', isStdou
 
 test('checkbox toggles by id, a new item is added without a date', OPTS, async ($, on) => {
   mock.clock(on)
-  mock.env(on, { HOME: '/home/x' })
   const runs: string[][] = []
   const envs: Record<string, string>[] = []
   const items = [
@@ -47,13 +46,12 @@ test('checkbox toggles by id, a new item is added without a date', OPTS, async (
   expect(runs).toContainEqual(['add', '--text', 'write the README'])
   expect(await ui.find({ type: 'Button', text: /write the README/ })).toBeDefined()
   expect(await ui.find({ type: 'Input', key: 'new-1' })).toBeDefined()
-  expect(envs.at(-1)).toMatchObject({ REMIND_PANE_TZ: 'Europe/Berlin', REMIND_PANE_DATA: '/home/x/rem', REMIND_PANE_TELEGRAM_CHAT: '42' })
+  expect(envs.at(-1)).toMatchObject({ REMIND_PANE_TZ: 'Europe/Berlin', REMIND_PANE_DATA: '~/rem', REMIND_PANE_TELEGRAM_CHAT: '42' })
   await ui.unmount()
 })
 
 test('a CLI error is shown and the field is kept', OPTS, async ($, on) => {
   mock.clock(on)
-  mock.env(on, { HOME: '/home/x' })
   on('ui.open', async () => ({ value: { isPlaced: true } }) as any)
   on('process.run', async (_: any, e: any) => {
     const argv = [...e.argv].slice(3) as string[]
