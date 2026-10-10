@@ -1,0 +1,14 @@
+{
+  "name": "remind-pane",
+  "owner": {
+    "name": "34823"
+  },
+  "description": "Reminders in a Claude Code pane, with an optional Telegram delivery",
+  "plugins": [
+    {
+      "name": "remind-pane",
+      "source": "./",
+      "description": "Reminders in a Claude Code pane: checkboxes, an add field, a stdlib-only CLI, optional Telegram delivery"
+    }
+  ]
+}

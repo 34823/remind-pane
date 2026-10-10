@@ -1,0 +1,42 @@
+{
+  "name": "remind-pane",
+  "version": "0.1.0",
+  "description": "Reminders in a Claude Code pane: checkboxes, delete, an add field, a small stdlib-only CLI; optional delivery to Telegram",
+  "author": { "name": "34823" },
+  "license": "MIT",
+  "keywords": ["reminders", "todo", "claude-code", "pane", "tui", "telegram", "function-hooks"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "python": {
+      "type": "string",
+      "title": "Python",
+      "description": "The Python that runs the CLI (standard library only, 3.9+).",
+      "default": "python3"
+    },
+    "dataDir": {
+      "type": "string",
+      "title": "Data folder",
+      "description": "Where reminders.json (your reminders, in plain text) lives. Empty: ~/.local/share/remind-pane.",
+      "default": ""
+    },
+    "timezone": {
+      "type": "string",
+      "title": "Time zone",
+      "description": "IANA name for dates you type and see, e.g. Europe/Berlin. Empty: the system's.",
+      "default": ""
+    },
+    "telegramToken": {
+      "type": "string",
+      "title": "Telegram bot token (optional)",
+      "description": "Only for delivery to Telegram by 'remind.py tick'. Create a bot with @BotFather. Empty: reminders are only stored and shown in the pane.",
+      "sensitive": true,
+      "default": ""
+    },
+    "telegramChat": {
+      "type": "string",
+      "title": "Telegram chat id (optional)",
+      "description": "The chat that receives reminders (your user id, after you have written to the bot).",
+      "default": ""
+    }
+  }
+}
